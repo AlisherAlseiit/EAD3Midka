@@ -3,6 +3,7 @@ package com.Alish.midka;
 import com.Alish.midka.Dao.product.ProductDao;
 import com.Alish.midka.Dao.user.UserDao;
 import com.Alish.midka.config.SpringConfig;
+import com.Alish.midka.controller.LoginController;
 import com.Alish.midka.controller.ProductController;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -20,9 +21,8 @@ public class SimpleSystem {
                 SpringConfig.class
         );
 
-
-        UserDao userDao = context.getBean("userDao", UserDao.class);
         ProductController productController = context.getBean("productController", ProductController.class);
+        LoginController loginController = context.getBean("loginController", LoginController.class);
 
         System.out.println("WELCOME TO MY APPLICATION");
         System.out.println("1. To Login as a ADMIN");
@@ -33,12 +33,8 @@ public class SimpleSystem {
 
         if (adminOrUser.equals("1")) {
 
-            System.out.println("NAME:");
-            String adminName = read.readLine();
-            System.out.println("PASSWORD:");
-            String adminPassword = read.readLine();
 
-            if (userDao.checkAdmin(adminName, adminPassword) != null) {
+            if (loginController.adminLogin()) {
 
                 System.out.println("WELCOME BACK ADMIN:");
 
@@ -77,12 +73,9 @@ public class SimpleSystem {
                 System.out.println("WRONG NAME OR PASSWORD");
 
         } else if (adminOrUser.equals("2")) {
-            System.out.println("NAME:");
-            String userName = read.readLine();
-            System.out.println("PASSWORD:");
-            String userPassword = read.readLine();
 
-            if (userDao.checkUser(userName, userPassword) != null) {
+
+            if (loginController.userLogin()) {
 
                 System.out.println("HELLO USER");
 
@@ -97,30 +90,18 @@ public class SimpleSystem {
                             productController.showAll();
                             break;
                         case "2":
-                            Long userId = userDao.checkUser(userName, userPassword).getId();
-                            productController.butProduct(userId);
+                            loginController.buyProduct();
                             break;
                         default:
                             userBool = false;
-
                     }
-
-
                 }
 
             } else
                 System.out.println("WRONG NAME OR PASSWORD");
 
         } else if (adminOrUser.equals("3")) {
-            System.out.println("NAME:");
-            String userName = read.readLine();
-            System.out.println("PASSWORD:");
-            String userPassword = read.readLine();
-
-            userDao.registerUser(userName, userPassword);
-
-            System.out.println("User Successfully registered");
-
+            loginController.userRegister();
         } else
             System.out.println("exit");
         return;

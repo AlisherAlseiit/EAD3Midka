@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 @Controller
-public class ProductController implements ApplicationEventPublisherAware {
+public class ProductController{
     private static BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
     private final ProductDao productDao;
-    private ApplicationEventPublisher eventPublisher;
+
 
     @Autowired
     public ProductController(ProductDao productDao) {
@@ -85,20 +85,8 @@ public class ProductController implements ApplicationEventPublisherAware {
         System.out.println("DELETED");
     }
 
-    public void butProduct(Long userId) throws IOException {
-        System.out.println("Enter id of the product");
-        Long productId = Long.valueOf(read.readLine());
 
-        productDao.createOrder(userId, productId);
 
-        this.eventPublisher.publishEvent(new UserEvent(this, userId));
-
-    }
-
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-        this.eventPublisher = applicationEventPublisher;
-    }
 }
 
 
