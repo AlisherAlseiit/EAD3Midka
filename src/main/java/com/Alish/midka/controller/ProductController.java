@@ -1,8 +1,11 @@
 package com.Alish.midka.controller;
 
 import com.Alish.midka.Dao.product.ProductDao;
+import com.Alish.midka.event.UserEvent;
 import com.Alish.midka.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Controller;
 
 import java.io.BufferedReader;
@@ -10,10 +13,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 @Controller
-public class ProductController {
+public class ProductController implements ApplicationEventPublisherAware {
     private static BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
     private final ProductDao productDao;
-
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public ProductController(ProductDao productDao) {
@@ -87,7 +90,14 @@ public class ProductController {
         Long productId = Long.valueOf(read.readLine());
 
         productDao.createOrder(userId, productId);
-        System.out.println("THX");
+
+        this.eventPublisher.publishEvent(new UserEvent(this, userId));
+
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
     }
 }
 

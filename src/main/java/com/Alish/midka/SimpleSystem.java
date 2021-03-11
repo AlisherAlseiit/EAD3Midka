@@ -20,7 +20,7 @@ public class SimpleSystem {
                 SpringConfig.class
         );
 
-        ProductDao productDao = context.getBean("productDao", ProductDao.class);
+
         UserDao userDao = context.getBean("userDao", UserDao.class);
         ProductController productController = context.getBean("productController", ProductController.class);
 
